@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from asyncio.windows_events import NULL
 import os
-from re import T
-from time import process_time_ns
+import re
 import requests
 import dns.resolver
 
@@ -10,8 +8,13 @@ os.environ['no_proxy'] = '*'
 requests.packages.urllib3.disable_warnings()
 
 def isResolve(url):
-    domain = url.split(":")[0]
+    domain = url.split(":")[0].split("/")[0]
+    r = re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",domain)
+    if r:
+        # print("t"+url)
+        return True
     try:
+        # print(domain)
         dns.resolver.resolve(domain,"A")
         return True
     except:
@@ -39,7 +42,7 @@ def main():
 
     n_urls = set()
     for url in urls:
-        if url is NULL:
+        if url is None:
             continue
         # 去除多余字符，去重
         url = url.strip().replace(" ", "").replace("https://", "").replace("http://", "")
@@ -49,9 +52,10 @@ def main():
     for url in n_urls:
         ret,t_url = isAlive(url)
         ret = str(ret)
+        print(t_url,ret)
         if ret.startswith("2"):#Todo打印出来
-            print(t_url)
-            t_urls.add(t_url)
+            # print(t_url)
+            t_urls.add(t_url+"\n")
             pass
         elif ret.startswith("3"):#Todo 跟随跳转
             pass
