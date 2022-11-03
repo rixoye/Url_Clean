@@ -36,6 +36,7 @@ def isAlive(url):
             pass
     return ret, t_url
 
+
 def main():
     with open("t.txt", "r") as f:
         urls = f.readlines()
